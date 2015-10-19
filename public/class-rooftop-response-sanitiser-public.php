@@ -189,8 +189,8 @@ class Rooftop_Response_Sanitiser_Public {
         unset($response->data['content']['rendered']);
         unset($response->data['excerpt']['rendered']);
 
-        // return the link attribute as a json object of post type and id
-        $this->return_link_as_object($response);
+        // remove the link. _links takes care of this.
+        unset($response->data['link']);
 
         return $response;
     }
@@ -252,18 +252,6 @@ class Rooftop_Response_Sanitiser_Public {
 
         $response->data['content']['json'] = $html;
         return $response;
-    }
-
-    /**
-     * @param $response
-     * @return array
-     *
-     * mutates $response to turn link: 'http://foo.bar.com/posts/12' into {type: 'post', id: 5} (includes an array of ancestors if necessary)
-     */
-    function return_link_as_object($response) {
-        $url_object = $this->parse_url($response->data['link'], $stringify_ancestors=false);
-
-        return $response->data['link'] = $url_object;
     }
 
     /**
